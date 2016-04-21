@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/paper"
+    tools:context="com.example.jinchen.diarytest.EditDiary">
+    <TextView
+        android:id="@+id/biaoti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:gravity="top"
+        android:textColor="@android:color/black"
+        android:layout_alignRight="@+id/ettext"
+        android:layout_alignEnd="@+id/ettext" />
+    <TextView
+        android:id="@+id/biaoti2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:gravity="top"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/biaoti"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/SaveButton"
+        android:layout_toStartOf="@+id/SaveButton" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/ettext"
+        android:gravity="top"
+        android:typeface="monospace"
+        android:hint="生活不是眼前的苟且，还有诗和远方！"
+        android:layout_weight="0.88"
+        android:allowUndo="true"
+        android:autoText="false"
+        android:layout_gravity="left"
+        android:layout_above="@+id/DeleteButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/biaoti2" />
+
+    <com.example.jinchen.diarytest.CmButton
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:id="@+id/DeleteButton"
+        android:src="@drawable/deletbutton"
+        android:layout_gravity="left"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <com.example.jinchen.diarytest.CmButton
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:id="@+id/ShareButton"
+        android:src="@drawable/sharebutton"
+        android:layout_gravity="center"
+        android:layout_below="@+id/ettext"
+        android:layout_centerHorizontal="true" />
+
+    <com.example.jinchen.diarytest.CmButton
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:id="@+id/SaveButton"
+        android:src="@drawable/checkbutton"
+        android:layout_gravity="right"
+        android:layout_below="@+id/ettext"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>
