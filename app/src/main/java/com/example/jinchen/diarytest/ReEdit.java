@@ -8,14 +8,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Environment;
-import android.provider.SyncStateContract;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -37,8 +40,12 @@ import java.io.IOException;
 public class ReEdit extends AppCompatActivity {
     private DiaryDB diaryDB;
     private SQLiteDatabase dbwriter;
-
+    private Uri imageUri;
     private IWXAPI api;
+    public static final int TAKE_PHOTO = 1;
+    public static final int CROP_PHOTO = 2;
+    private ImageView picture;
+
 
 
 
@@ -64,6 +71,8 @@ public class ReEdit extends AppCompatActivity {
         Typeface et = Typeface.createFromAsset(getAssets(), "fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
         editText.setTypeface(et);//使用字体;
 
+        picture=(ImageView)findViewById(R.id.image);
+
 
         diaryDB = new DiaryDB(this);
         dbwriter = diaryDB.getWritableDatabase();
@@ -87,6 +96,27 @@ public class ReEdit extends AppCompatActivity {
                 startActivity(new Intent(ReEdit.this, MainActivity.class));
             }
         });
+        findViewById(R.id.CameraButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                File outputImage = new File(Environment. getExternalStorageDirectory(), "tempImage.jpg");
+                imageUri = Uri.fromFile(outputImage);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, TAKE_PHOTO);
+
+
+            }
+
+        });
+
+
+
+
+
+
+
         findViewById(R.id.ShareButton1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +152,39 @@ public class ReEdit extends AppCompatActivity {
         });
 
 
+
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Intent intent = new Intent("com.android.camera.action.CROP");
+                    intent.setDataAndType(imageUri, "image/*");
+                    intent.putExtra("scale", true);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    startActivityForResult(intent, CROP_PHOTO); // 启动裁剪程序
+                }
+                break;
+            case CROP_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeStream (getContentResolver()
+                                .openInputStream(imageUri));
+                        picture.setImageBitmap(bitmap); // 将裁剪后的照片显示出来
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+
+
+
     private void sharetoweibo() {
         finish();
 
@@ -160,7 +222,7 @@ public class ReEdit extends AppCompatActivity {
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(imagePath);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 50, fos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
             fos.close();
         } catch (FileNotFoundException e) {

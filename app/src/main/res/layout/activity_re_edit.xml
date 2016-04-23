@@ -9,6 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/paper"
     tools:context="com.example.jinchen.diarytest.ReEdit">
+
     <TextView
         android:id="@+id/biaoti1"
         android:layout_width="match_parent"
@@ -43,7 +44,11 @@
         android:layout_above="@+id/DeleteButton1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/biaoti3" />
+        android:layout_below="@+id/biaoti3"
+        android:layout_toStartOf="@+id/SaveButton1"
+
+        android:layout_alignRight="@+id/SaveButton1"
+        android:layout_alignEnd="@+id/SaveButton1" />
 
     <com.example.jinchen.diarytest.CmButton
         android:layout_weight="1"
@@ -65,8 +70,19 @@
         android:id="@+id/ShareButton1"
         android:src="@drawable/sharebutton"
         android:layout_gravity="center"
-        android:layout_below="@+id/ettext1"
+        android:layout_alignTop="@+id/DeleteButton1"
         android:layout_centerHorizontal="true" />
+    <com.example.jinchen.diarytest.CmButton
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:id="@+id/CameraButton1"
+        android:src="@drawable/camerabutton"
+        android:layout_gravity="center"
+        android:layout_alignBottom="@+id/ettext1"
+        android:layout_alignRight="@+id/ShareButton1"
+        android:layout_alignEnd="@+id/ShareButton1" />
 
     <com.example.jinchen.diarytest.CmButton
         android:layout_weight="1"
@@ -79,5 +95,14 @@
         android:layout_below="@+id/ettext1"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="63dp"
+        android:layout_height="112dp"
+        android:id="@+id/image"
+        android:layout_alignBottom="@+id/ettext1"
+        android:layout_alignRight="@+id/SaveButton1"
+        android:layout_alignEnd="@+id/SaveButton1" />
+
 
 </RelativeLayout>
