@@ -16,8 +16,7 @@
         android:textSize="24sp"
         android:gravity="top"
         android:textColor="@android:color/black"
-        android:layout_alignRight="@+id/ettext"
-        android:layout_alignEnd="@+id/ettext" />
+        android:layout_alignEnd="@+id/biaoti2" />
     <TextView
         android:id="@+id/biaoti2"
         android:layout_width="match_parent"
@@ -41,11 +40,13 @@
         android:layout_weight="0.88"
         android:allowUndo="true"
         android:autoText="false"
+        android:textColor="#111111"
         android:layout_gravity="left"
         android:layout_above="@+id/DeleteButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/biaoti2" />
+        android:layout_below="@+id/biaoti2"
+        android:layout_alignEnd="@+id/SaveButton" />
 
     <com.example.jinchen.diarytest.CmButton
         android:layout_weight="1"

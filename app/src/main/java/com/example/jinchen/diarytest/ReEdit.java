@@ -1,5 +1,6 @@
 package com.example.jinchen.diarytest;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -37,7 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-public class ReEdit extends AppCompatActivity {
+public class ReEdit extends Activity {
     private DiaryDB diaryDB;
     private SQLiteDatabase dbwriter;
     private Uri imageUri;

@@ -1,5 +1,6 @@
 package com.example.jinchen.diarytest;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class EditDiary extends AppCompatActivity {
+public class EditDiary extends Activity {
     private TextView timeTextView;
     private TextView positionTextView;
     private LocationManager locationManager;

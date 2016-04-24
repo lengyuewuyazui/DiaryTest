@@ -1,11 +1,13 @@
 package com.example.jinchen.diarytest;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,21 +37,22 @@ public class  MainActivity extends AppCompatActivity {
     private SQLiteDatabase dbReader;
     private Cursor cursor;
    // private String[] data={"你","我","他","她","它"};
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-       MenuInflater inflater = getMenuInflater();
-       inflater.inflate(R.menu.actionbartest, menu);
-       return super.onCreateOptionsMenu(menu);
-   }
+//   @Override
+//   public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.actionbartest, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        myToolbar.setLogo(R.mipmap.icon_small);
-        setSupportActionBar(myToolbar);
+  //      setContentView(R.layout.activity_main);
+//        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        myToolbar.setLogo(R.mipmap.icon_small);
+//        setSupportActionBar(myToolbar);
         initView();
         findViewById(R.id.NewDiaryButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,14 +71,17 @@ public class  MainActivity extends AppCompatActivity {
         dbReader=diarydb.getReadableDatabase();
         cursor = dbReader.query(diarydb.TABLE_NAME, null, null, null, null, null, null);
 //        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
         final ListView listView=(ListView)findViewById(R.id.listView);
 
        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(MainActivity.this,R.layout.listview_layout , cursor,
                 new String[] {DiaryDB.DATE},
-                new int[] { R.id.test_id },
+                new int[] { R.id.test_id},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
+
         listView.setAdapter(adapter);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
