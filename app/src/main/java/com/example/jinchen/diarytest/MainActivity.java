@@ -11,6 +11,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -49,16 +50,33 @@ public class  MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-  //      setContentView(R.layout.activity_main);
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        myToolbar.setLogo(R.mipmap.icon_small);
-//        setSupportActionBar(myToolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar.setLogo(R.mipmap.icon_small);
+        myToolbar.setTitle("心晴日记");
+        myToolbar.inflateMenu(R.menu.actionbartest);
+     //   setSupportActionBar(myToolbar);
+        myToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int menuItemId = item.getItemId();
+                if (menuItemId == R.id.menu_search) {
+                    Toast.makeText(MainActivity.this , "Search!" , Toast.LENGTH_SHORT).show();
+
+                } else if(menuItemId == R.id.action_settings) {
+                    Toast.makeText(MainActivity.this ,"Create by Jinchen", Toast.LENGTH_SHORT).show();
+
+                }
+                return true;
+            }
+        });
+
+
         initView();
         findViewById(R.id.NewDiaryButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MainActivity.this,EditDiary.class));
+                startActivity(new Intent(MainActivity.this, EditDiary.class));
             }
         });
     }
@@ -74,9 +92,10 @@ public class  MainActivity extends AppCompatActivity {
 
         final ListView listView=(ListView)findViewById(R.id.listView);
 
+
        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(MainActivity.this,R.layout.listview_layout , cursor,
-                new String[] {DiaryDB.DATE},
-                new int[] { R.id.test_id},
+                new String[] {DiaryDB.DATE,DiaryDB.WEATHER, DiaryDB.CONTENT},
+                new int[] { R.id.test_id,R.id.test_id2,R.id.test_id3},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 

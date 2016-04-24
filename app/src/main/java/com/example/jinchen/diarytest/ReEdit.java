@@ -14,14 +14,16 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -38,7 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-public class ReEdit extends Activity {
+public class ReEdit extends AppCompatActivity {
     private DiaryDB diaryDB;
     private SQLiteDatabase dbwriter;
     private Uri imageUri;
@@ -55,6 +57,54 @@ public class ReEdit extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_re_edit);
+
+        Toolbar myToolbar1 = (Toolbar) findViewById(R.id.toolbar2);
+        myToolbar1.setNavigationIcon(android.R.drawable.ic_menu_revert);
+        myToolbar1.setLogo(R.mipmap.icon_small);
+        myToolbar1.setTitle("心晴日记");
+        myToolbar1.inflateMenu(R.menu.editmenu);
+        myToolbar1.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+        myToolbar1.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final File imagePath = new File(Environment.getExternalStorageDirectory() + "/screenshot.png");
+                AlertDialog.Builder dialog = new AlertDialog.Builder(ReEdit.this);
+                Bitmap bitmap = takeScreenshot();
+                saveBitmap(bitmap, imagePath);
+                dialog.setTitle("分享");
+                dialog.setMessage("想要分享给朋友看吗？.");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("分享到微信朋友圈", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sharetowechat(imagePath);
+                        finish();
+
+
+                    }
+                });
+                dialog.setNegativeButton("分享到微博", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sharetoweibo();
+                        finish();
+
+                    }
+                });
+                dialog.show();
+
+
+                return true;
+            }
+        });
+
 
         api = WXAPIFactory.createWXAPI(this, "wx7b67f9f371b623b1");
         api.registerApp("wx7b67f9f371b623b1");
@@ -111,48 +161,6 @@ public class ReEdit extends Activity {
             }
 
         });
-
-
-
-
-
-
-
-        findViewById(R.id.ShareButton1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final File imagePath = new File(Environment.getExternalStorageDirectory() + "/screenshot.png");
-                AlertDialog.Builder dialog = new AlertDialog.Builder(ReEdit.this);
-                Bitmap bitmap = takeScreenshot();
-                saveBitmap(bitmap, imagePath);
-                dialog.setTitle("分享");
-                dialog.setMessage("想要分享给朋友看吗？.");
-                dialog.setCancelable(false);
-                dialog.setPositiveButton("分享到微信朋友圈", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharetowechat(imagePath);
-                        finish();
-
-
-                    }
-                });
-                dialog.setNegativeButton("分享到微博", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharetoweibo();
-                        finish();
-
-                    }
-                });
-                dialog.show();
-
-
-
-            }
-        });
-
-
 
     }
     @Override
