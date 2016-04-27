@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -37,6 +38,7 @@ public class  MainActivity extends AppCompatActivity {
     private DiaryDB diarydb;
     private SQLiteDatabase dbReader;
     private Cursor cursor;
+    private FloatingActionButton floatingActionButton;
    // private String[] data={"你","我","他","她","它"};
 //   @Override
 //   public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,10 +62,10 @@ public class  MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 int menuItemId = item.getItemId();
                 if (menuItemId == R.id.menu_search) {
-                    Toast.makeText(MainActivity.this , "Search!" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Search!", Toast.LENGTH_SHORT).show();
 
-                } else if(menuItemId == R.id.action_settings) {
-                    Toast.makeText(MainActivity.this ,"Create by Jinchen", Toast.LENGTH_SHORT).show();
+                } else if (menuItemId == R.id.action_settings) {
+                    Toast.makeText(MainActivity.this, "Create by Jinchen", Toast.LENGTH_SHORT).show();
 
                 }
                 return true;
@@ -71,14 +73,22 @@ public class  MainActivity extends AppCompatActivity {
         });
 
 
+
         initView();
+
+        floatingActionButton=(FloatingActionButton)findViewById(R.id.NewDiaryButton2);
         findViewById(R.id.NewDiaryButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                startActivity(new Intent(MainActivity.this, EditDiary.class));
+                Intent intent=new Intent(MainActivity.this, EditDiary.class);
+                intent.putExtra("flag",0);
+                startActivity(intent);
             }
         });
+
+
+
+
     }
     public void initView()
     {
@@ -111,6 +121,7 @@ public class  MainActivity extends AppCompatActivity {
                 i.putExtra("diarydb.DATE", cursor.getString(cursor.getColumnIndex(diarydb.DATE)));
                 i.putExtra("diarydb.WEATHER", cursor.getString(cursor.getColumnIndex(diarydb.WEATHER)));
                 i.putExtra("diarydb.CONTENT", cursor.getString(cursor.getColumnIndex(diarydb.CONTENT)));
+                i.putExtra("flag",1);
                 startActivity(i);
             }
         });

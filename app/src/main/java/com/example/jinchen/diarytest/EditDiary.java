@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,9 +29,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+
 public class EditDiary extends Activity {
     private TextView timeTextView;
     private TextView positionTextView;
+    private EditText editText;
     private LocationManager locationManager;
     private String provider;
     public static final int SHOW_LOCATION = 0;
@@ -42,17 +45,34 @@ public class EditDiary extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_diary);
-        timeTextView=(TextView)findViewById(R.id.biaoti);//得到TextView控件对象
-        positionTextView=(TextView)findViewById(R.id.biaoti2);//得到TextView控件对象
-        Typeface tv=Typeface.createFromAsset(getAssets(),"fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
+        timeTextView = (TextView) findViewById(R.id.biaoti);//得到TextView控件对象
+        positionTextView = (TextView) findViewById(R.id.biaoti2);//得到TextView控件对象
+        Typeface tv = Typeface.createFromAsset(getAssets(), "fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
         timeTextView.setTypeface(tv);
         positionTextView.setTypeface(tv);//使用字体
 
-
-
-        final EditText editText=(EditText)findViewById(R.id.ettext);//得到EditText控件对象
-        Typeface et=Typeface.createFromAsset(getAssets(),"fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
+        editText = (EditText) findViewById(R.id.ettext);//得到EditText控件对象
+        Typeface et = Typeface.createFromAsset(getAssets(), "fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
         editText.setTypeface(et);//使用字体;
+//        Toolbar myToolbar1 = (Toolbar) findViewById(R.id.toolbar2);
+//        myToolbar1.setNavigationIcon(android.R.drawable.ic_menu_revert);
+//        myToolbar1.setLogo(R.mipmap.icon_small);
+//        myToolbar1.setTitle("心晴日记");
+//        myToolbar1.inflateMenu(R.menu.editmenu);
+//        myToolbar1.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
+
+        int flag = getIntent().getIntExtra("flag",100);
+        if(flag==0) {
+            InitLoctionWeather();
+        }
+
+    }
+    private void InitLoctionWeather(){
         diaryDB=new DiaryDB(this);
         dbwriter=diaryDB.getWritableDatabase();
         findViewById(R.id.SaveButton).setOnClickListener(new View.OnClickListener() {
@@ -65,17 +85,17 @@ public class EditDiary extends Activity {
                 values.put(diaryDB.CONTENT, editText.getText().toString());
 
                 dbwriter.insert(diaryDB.TABLE_NAME, null, values);
-               // finish();
+                // finish();
 
 
-              startActivity(new Intent(EditDiary.this, MainActivity.class));
+                startActivity(new Intent(EditDiary.this, MainActivity.class));
 
             }
         });
         findViewById(R.id.DeleteButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // startActivity(new Intent(EditDiary.this,MainActivity.class));
+                // startActivity(new Intent(EditDiary.this,MainActivity.class));
                 finish();
             }
         });
@@ -202,3 +222,4 @@ public class EditDiary extends Activity {
 
 
 }
+

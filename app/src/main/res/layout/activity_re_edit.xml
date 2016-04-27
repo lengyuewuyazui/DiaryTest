@@ -23,13 +23,11 @@
         android:layout_height="wrap_content"
         card_view:cardBackgroundColor="#e0e0e0"
         card_view:cardCornerRadius="2dp"
-        card_view:cardElevation="2dp"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="6dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_below="@+id/toolbar2"
-        android:layout_alignRight="@+id/image"
-        android:layout_alignEnd="@+id/image">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,10 +65,10 @@
         android:id="@+id/cardview2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:elevation="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/cardview"
@@ -79,7 +77,7 @@
         card_view:cardBackgroundColor="#e0e0e0"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="2dp"
-        android:layout_above="@+id/DeleteButton1">
+        android:layout_above="@+id/SaveButton1">
 
 
 
@@ -121,13 +119,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00000000"
-        android:id="@+id/CameraButton1"
-        android:src="@android:drawable/ic_menu_add"
-
-        app:fabSize="mini"
+        android:id="@+id/AddButton1"
+        android:src="@android:drawable/ic_input_add"
         android:layout_gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+    <android.support.design.widget.FloatingActionButton
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:id="@+id/UndoButton1"
+        android:src="@android:drawable/ic_delete"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/SaveButton1"
@@ -143,15 +150,47 @@
         android:layout_alignRight="@+id/cardview2"
         android:layout_alignEnd="@+id/cardview2" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/CameraButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:elevation="8dp"
+        app:pressedTranslationZ="8dp"
+        android:layout_marginTop="18dp"
+        android:src="@android:drawable/ic_menu_camera"
+        android:layout_below="@+id/GalleryButton1"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/GalleryButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:elevation="8dp"
+        app:pressedTranslationZ="8dp"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:layout_alignTop="@+id/image"
+        android:layout_alignLeft="@+id/CameraButton1"
+        android:layout_alignStart="@+id/CameraButton1"
+        android:visibility="invisible"/>
+
 
 
     <ImageView
         android:layout_width="63dp"
         android:layout_height="112dp"
         android:id="@+id/image"
-        android:layout_above="@+id/SaveButton1"
+        android:elevation="5dp"
+        android:layout_alignBottom="@+id/cardview2"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="15dp"/>
 
 
 </RelativeLayout>

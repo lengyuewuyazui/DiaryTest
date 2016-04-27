@@ -12,16 +12,18 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ImageView;;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +49,15 @@ public class ReEdit extends AppCompatActivity {
     private IWXAPI api;
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
+    public static final int SELECT_PHOTO = 3 ;
     private ImageView picture;
+    private FloatingActionButton caremabutton;
+    private FloatingActionButton gallerybutton;
+    private FloatingActionButton addbutton;
+    private FloatingActionButton undobutton;
+    private TextView textView1;
+    private TextView textView2;
+    private EditText editText;
 
 
 
@@ -74,61 +84,90 @@ public class ReEdit extends AppCompatActivity {
         myToolbar1.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+
                 final File imagePath = new File(Environment.getExternalStorageDirectory() + "/screenshot.png");
-                AlertDialog.Builder dialog = new AlertDialog.Builder(ReEdit.this);
                 Bitmap bitmap = takeScreenshot();
                 saveBitmap(bitmap, imagePath);
-                dialog.setTitle("分享");
-                dialog.setMessage("想要分享给朋友看吗？.");
-                dialog.setCancelable(false);
-                dialog.setPositiveButton("分享到微信朋友圈", new DialogInterface.OnClickListener() {
+                PopupMenu popupMenu = new PopupMenu(ReEdit.this, findViewById(R.id.send));
+                Menu menu = popupMenu.getMenu();
+
+                // 通过代码添加菜单项
+                menu.add(Menu.NONE, Menu.FIRST + 0, 0, "分享到微信朋友圈");
+                menu.add(Menu.NONE, Menu.FIRST + 1, 1, "分享到微博");
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharetowechat(imagePath);
-                        finish();
-
-
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case Menu.FIRST + 0:
+                                sharetowechat(imagePath);
+                                break;
+                            case Menu.FIRST + 1:
+                                sharetoweibo();
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
                     }
                 });
-                dialog.setNegativeButton("分享到微博", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharetoweibo();
-                        finish();
+                popupMenu.show();
 
-                    }
-                });
-                dialog.show();
-
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(ReEdit.this);
+//                dialog.setTitle("分享");
+//                dialog.setMessage("想要分享给朋友看吗？.");
+//                dialog.setCancelable(false);
+//                dialog.setPositiveButton("分享到微信朋友圈", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        sharetowechat(imagePath);
+//                        finish();
+//
+//
+//                    }
+//                });
+//                dialog.setNegativeButton("分享到微博", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        sharetoweibo();
+//                        finish();
+//
+//                    }
+//                });
+//                dialog.show();
+//
 
                 return true;
             }
         });
 
 
+
         api = WXAPIFactory.createWXAPI(this, "wx7b67f9f371b623b1");
         api.registerApp("wx7b67f9f371b623b1");
-
-        final TextView textView1 = (TextView) findViewById(R.id.biaoti1);//得到TextView控件对象
-        final TextView textView2 = (TextView) findViewById(R.id.biaoti3);//得到TextView控件对象
-
+        diaryDB = new DiaryDB(this);
+        dbwriter = diaryDB.getWritableDatabase();
+        textView1 = (TextView) findViewById(R.id.biaoti1);//得到TextView控件对象
+        textView2 = (TextView) findViewById(R.id.biaoti3);//得到TextView控件对象
+        editText = (EditText) findViewById(R.id.ettext1);//得到EditText控件对象
         Typeface tv = Typeface.createFromAsset(getAssets(), "fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
         textView1.setTypeface(tv);//使用字体
-        textView1.setText(getIntent().getStringExtra("diarydb.DATE"));
-        textView2.setTypeface(tv);//使用字体
-        textView2.setText(getIntent().getStringExtra("diarydb.WEATHER"));
 
-        final EditText editText = (EditText) findViewById(R.id.ettext1);//得到EditText控件对象
+        textView2.setTypeface(tv);//使用字体
+
+
         Typeface et = Typeface.createFromAsset(getAssets(), "fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
         editText.setTypeface(et);//使用字体;
 
         picture=(ImageView)findViewById(R.id.image);
+        int flag=getIntent().getIntExtra("flag",100);
+        if(flag==1){
+            ReEdit();
+        }
 
 
-        diaryDB = new DiaryDB(this);
-        dbwriter = diaryDB.getWritableDatabase();
 
-        editText.setText(getIntent().getStringExtra("diarydb.CONTENT"));
+
+
         findViewById(R.id.DeleteButton1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,11 +186,39 @@ public class ReEdit extends AppCompatActivity {
                 startActivity(new Intent(ReEdit.this, MainActivity.class));
             }
         });
+
+       caremabutton =(FloatingActionButton)findViewById(R.id.CameraButton1);
+       gallerybutton =(FloatingActionButton)findViewById(R.id.GalleryButton1);
+       addbutton =(FloatingActionButton)findViewById(R.id.AddButton1);
+       undobutton =(FloatingActionButton)findViewById(R.id.UndoButton1);
+
+        findViewById(R.id.AddButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                caremabutton.show();
+                gallerybutton.show();
+                addbutton.hide();
+                undobutton.show();
+
+            }
+
+        });
+        findViewById(R.id.UndoButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                caremabutton.hide();
+                gallerybutton.hide();
+                addbutton.show();
+                undobutton.hide();
+
+            }
+
+        });
+
         findViewById(R.id.CameraButton1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                File outputImage = new File(Environment. getExternalStorageDirectory(), "tempImage.jpg");
+                File outputImage = new File(Environment.getExternalStorageDirectory(), "tempImage.jpg");
                 imageUri = Uri.fromFile(outputImage);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -159,8 +226,26 @@ public class ReEdit extends AppCompatActivity {
 
 
             }
-
         });
+        findViewById(R.id.GalleryButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File outputImage2 = new File(Environment.getExternalStorageDirectory(), "tempImage2.jpg");
+                imageUri = Uri.fromFile(outputImage2);
+                Intent intent2 = new Intent(Intent.ACTION_GET_CONTENT);
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                intent2.setDataAndType(imageUri, "image/*");
+                startActivityForResult(intent2, SELECT_PHOTO);
+
+            }
+        });
+
+
+    }
+    private void ReEdit(){
+        textView1.setText(getIntent().getStringExtra("diarydb.DATE"));
+        textView2.setText(getIntent().getStringExtra("diarydb.WEATHER"));
+        editText.setText(getIntent().getStringExtra("diarydb.CONTENT"));
 
     }
     @Override
@@ -173,6 +258,17 @@ public class ReEdit extends AppCompatActivity {
                     intent.putExtra("scale", true);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     startActivityForResult(intent, CROP_PHOTO); // 启动裁剪程序
+                }
+                break;
+            case SELECT_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Intent intent = new Intent("com.android.camera.action.CROP");
+                    intent.setDataAndType(imageUri, "image/*");
+                    intent.putExtra("crop", true);
+                    intent.putExtra("scale", true);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    startActivityForResult(intent, CROP_PHOTO); // 启动裁剪程序
+
                 }
                 break;
             case CROP_PHOTO:
