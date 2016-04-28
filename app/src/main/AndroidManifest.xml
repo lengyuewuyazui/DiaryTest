@@ -32,7 +32,6 @@
             </intent-filter>
         </activity>
         <!-- 编辑 -->
-        <activity android:name=".EditDiary" />
         <activity android:name=".ReEdit">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />

@@ -80,7 +80,8 @@ public class  MainActivity extends AppCompatActivity {
         findViewById(R.id.NewDiaryButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, EditDiary.class);
+//                Intent intent=new Intent(MainActivity.this, EditDiary.class);
+                Intent intent=new Intent(MainActivity.this, ReEdit.class);
                 intent.putExtra("flag",0);
                 startActivity(intent);
             }

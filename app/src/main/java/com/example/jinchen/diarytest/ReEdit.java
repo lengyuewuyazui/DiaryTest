@@ -3,14 +3,20 @@ package com.example.jinchen.diarytest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -36,10 +42,17 @@ import com.tencent.mm.sdk.openapi.WXMediaMessage;
 import com.tencent.mm.sdk.platformtools.Util;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 
 public class ReEdit extends AppCompatActivity {
@@ -58,6 +71,11 @@ public class ReEdit extends AppCompatActivity {
     private TextView textView1;
     private TextView textView2;
     private EditText editText;
+
+
+    private LocationManager locationManager;
+    private String provider;
+    public static final int SHOW_LOCATION = 0;
 
 
 
@@ -163,6 +181,12 @@ public class ReEdit extends AppCompatActivity {
         if(flag==1){
             ReEdit();
         }
+        else if (flag==0){
+            InitLoctionWeather();
+        }
+        else
+        finish();
+
 
 
 
@@ -336,6 +360,155 @@ public class ReEdit extends AppCompatActivity {
             Log.e("GREC", e.getMessage(), e);
         }
     }
+
+
+    private void InitLoctionWeather(){
+        diaryDB=new DiaryDB(this);
+        dbwriter=diaryDB.getWritableDatabase();
+        findViewById(R.id.SaveButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ContentValues values = new ContentValues();
+                values.put(diaryDB.DATE, textView1.getText().toString());
+                values.put(diaryDB.WEATHER, textView2.getText().toString());
+                values.put(diaryDB.CONTENT, editText.getText().toString());
+
+                dbwriter.insert(diaryDB.TABLE_NAME, null, values);
+                // finish();
+
+
+                startActivity(new Intent(ReEdit.this, MainActivity.class));
+
+            }
+        });
+        findViewById(R.id.DeleteButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // startActivity(new Intent(EditDiary.this,MainActivity.class));
+                finish();
+            }
+        });
+
+
+
+        locationManager = (LocationManager) getSystemService(Context. LOCATION_SERVICE);
+// 获取所有可用的位置提供器
+        List<String> providerList = locationManager.getProviders(true);
+        if (providerList.contains(LocationManager.GPS_PROVIDER)) {
+            provider = LocationManager.GPS_PROVIDER;
+        } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {
+            provider = LocationManager.NETWORK_PROVIDER;
+        } else {
+// 当没有可用的位置提供器时，弹出Toast提示用户
+            Toast.makeText(this, "No location provider to use", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+        if (location != null) {
+// 显示当前设备的位置信息
+            showLocation(location);
+        }
+        locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
+    }
+    protected void onDestroy() {
+        super.onDestroy();
+        if (locationManager != null) {
+// 关闭程序时将监听器移除
+            locationManager.removeUpdates(locationListener);
+        }
+    }
+    LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+        @Override
+        public void onLocationChanged(Location location) {
+            // 更新当前设备的位置信息
+            showLocation(location);
+        }
+
+
+
+    };
+    private Handler handler1 = new Handler()
+    {
+        public void handleMessage(Message msg) {
+            switch (msg.what)
+            {
+                case SHOW_LOCATION:
+                    String currentPosition = (String) msg.obj;
+                    textView1.setText(getTime());
+                    textView2.setText(currentPosition);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private void showLocation(Location location)
+    {
+        String url1 = "https://api.thinkpage.cn/v3/weather/now.json?key=mtxenlmmlwjavepj&location=";
+        String url2 = String.valueOf(location.getLatitude());
+        String url3 = String.valueOf(location.getLongitude());
+        String url4 = "&language=zh-Hans&unit=c";
+        String url = url1 + url2 + ":" + url3 + url4;
+
+        LotionWeather.sendHttpRequest(url, new HttpCallbackListener() {
+
+
+            @Override
+            public void onFinish(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray resultArray = jsonObject.getJSONArray("results");
+                    JSONObject subObject = resultArray.getJSONObject(0);
+                    JSONObject subObject1 = subObject.getJSONObject("location");
+                    String address11 = subObject1.getString("path");
+                    String address1 = address11.substring(3, address11.length() - 3);
+
+                    JSONObject subObject2 = subObject.getJSONObject("now");
+                    String address2 = subObject2.getString("text");
+                    String address3 = subObject2.getString("temperature");
+                    String address = address1 + " " + address2 + " " + address3 + "℃";
+
+                    Message message = new Message();
+                    message.what = SHOW_LOCATION;
+                    message.obj = address;
+                    //message.obj = address;
+                    handler1.sendMessage(message);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+
+            }
+        });
+
+    }
+    private String getTime()
+    {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        Date curDate = new Date();
+        String str = format.format(curDate);
+        return str;
+    }
+
 
 }
 
