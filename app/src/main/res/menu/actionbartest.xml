@@ -6,8 +6,17 @@
         android:id="@+id/menu_search"
         android:title="search"
         android:icon="@android:drawable/ic_menu_search"
-        android:actionViewClass="android.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom"/>
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:gravity="top"
+        android:textColor="#111111"
+        android:textCursorDrawable="@null"
+        android:typeface="monospace"
+        android:layout_weight="0.88"
+        android:allowUndo="true"
+        android:autoText="false"
+        android:layout_gravity="left"
+        app:showAsAction="always"/>
+
 
     <!-- Settings, should always be in the overflow -->
     <item

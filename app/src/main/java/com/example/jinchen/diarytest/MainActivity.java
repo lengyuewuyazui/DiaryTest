@@ -39,14 +39,6 @@ public class  MainActivity extends AppCompatActivity {
     private SQLiteDatabase dbReader;
     private Cursor cursor;
     private FloatingActionButton floatingActionButton;
-   // private String[] data={"你","我","他","她","它"};
-//   @Override
-//   public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.actionbartest, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +48,12 @@ public class  MainActivity extends AppCompatActivity {
         myToolbar.setLogo(R.mipmap.icon_small);
         myToolbar.setTitle("心晴日记");
         myToolbar.inflateMenu(R.menu.actionbartest);
-     //   setSupportActionBar(myToolbar);
         myToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int menuItemId = item.getItemId();
                 if (menuItemId == R.id.menu_search) {
-                    Toast.makeText(MainActivity.this, "Search!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, Search.class));
 
                 } else if (menuItemId == R.id.action_settings) {
                     Toast.makeText(MainActivity.this, "Create by Jinchen", Toast.LENGTH_SHORT).show();
@@ -72,11 +63,8 @@ public class  MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         initView();
 
-        floatingActionButton=(FloatingActionButton)findViewById(R.id.NewDiaryButton2);
         findViewById(R.id.NewDiaryButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +79,9 @@ public class  MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
     public void initView()
     {
 //        ArrayAdapter<String>adapter=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_list_item_1,data);
