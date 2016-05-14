@@ -64,14 +64,109 @@ public class  MainActivity extends AppCompatActivity {
         });
 
         initView();
+        final FloatingActionButton newbutton=(FloatingActionButton)findViewById(R.id.NewDiaryButton);
+        final FloatingActionButton undunewbutton=(FloatingActionButton)findViewById(R.id.UndoNewDiaryButton);
+        final FloatingActionButton smailbutton=(FloatingActionButton)findViewById(R.id.SmailFace);
+        final FloatingActionButton coolbutton=(FloatingActionButton)findViewById(R.id.CoolFace);
+        final FloatingActionButton lovebutton=(FloatingActionButton)findViewById(R.id.LoveFace);
+        final FloatingActionButton upsetbutton=(FloatingActionButton)findViewById(R.id.UpsetFace);
+        final FloatingActionButton scarybutton=(FloatingActionButton)findViewById(R.id.ScaryFace);
+        final FloatingActionButton angrybutton=(FloatingActionButton)findViewById(R.id.AngryFace);
+
+
+
+
 
         findViewById(R.id.NewDiaryButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                smailbutton.show();
+                coolbutton.show();
+                lovebutton.show();
+                upsetbutton.show();
+                scarybutton.show();
+                angrybutton.show();
+                newbutton.hide();
+                undunewbutton.show();
 //                Intent intent=new Intent(MainActivity.this, EditDiary.class);
+//                Intent intent=new Intent(MainActivity.this, ReEdit.class);
+//                intent.putExtra("flag",0);
+//                startActivity(intent);
+            }
+        });
+        findViewById(R.id.UndoNewDiaryButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                smailbutton.hide();
+                coolbutton.hide();
+                lovebutton.hide();
+                upsetbutton.hide();
+                scarybutton.hide();
+                angrybutton.hide();
+                newbutton.show();
+                undunewbutton.hide();
+//                Intent intent=new Intent(MainActivity.this, EditDiary.class);
+
+            }
+        });
+        findViewById(R.id.SmailFace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, ReEdit.class);
+                intent.putExtra("flag", 0);
+                intent.putExtra("mood",0);
+                startActivity(intent);
+
+            }
+        });
+        findViewById(R.id.CoolFace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent=new Intent(MainActivity.this, ReEdit.class);
                 intent.putExtra("flag",0);
+                intent.putExtra("mood",1);
                 startActivity(intent);
+
+            }
+        });
+        findViewById(R.id.LoveFace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, ReEdit.class);
+                intent.putExtra("flag",0);
+                intent.putExtra("mood",2);
+                startActivity(intent);
+
+            }
+        });
+        findViewById(R.id.UpsetFace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, ReEdit.class);
+                intent.putExtra("flag",0);
+                intent.putExtra("mood",3);
+                startActivity(intent);
+
+            }
+        });
+        findViewById(R.id.ScaryFace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, ReEdit.class);
+                intent.putExtra("flag",0);
+                intent.putExtra("mood",4);
+                startActivity(intent);
+
+            }
+        });
+        findViewById(R.id.AngryFace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, ReEdit.class);
+                intent.putExtra("flag",0);
+                intent.putExtra("mood",5);
+                startActivity(intent);
+
             }
         });
 
@@ -96,8 +191,8 @@ public class  MainActivity extends AppCompatActivity {
 
 
        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(MainActivity.this,R.layout.listview_layout , cursor,
-                new String[] {DiaryDB.DATE,DiaryDB.WEATHER, DiaryDB.CONTENT},
-                new int[] { R.id.test_id,R.id.test_id2,R.id.test_id3},
+                new String[] {DiaryDB.TITLE,DiaryDB.WEATHER,DiaryDB.DATE, DiaryDB.CONTENT},
+                new int[] { R.id.db_title,R.id.db_weather,R.id.db_date,R.id.db_content},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 
@@ -111,8 +206,11 @@ public class  MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, ReEdit.class);
                 i.putExtra("diarydb.ID", cursor.getInt(cursor.getColumnIndex(diarydb.ID)));
                 i.putExtra("diarydb.DATE", cursor.getString(cursor.getColumnIndex(diarydb.DATE)));
+                i.putExtra("diarydb.TITLE", cursor.getString(cursor.getColumnIndex(diarydb.TITLE)));
                 i.putExtra("diarydb.WEATHER", cursor.getString(cursor.getColumnIndex(diarydb.WEATHER)));
                 i.putExtra("diarydb.CONTENT", cursor.getString(cursor.getColumnIndex(diarydb.CONTENT)));
+                i.putExtra("diarydb.MOOD",cursor.getInt(cursor.getColumnIndex(diarydb.MOOD)));
+              //  i.putExtra("diarydb.TIPS",cursor.getInt(cursor.getColumnIndex(diarydb.TIPS)));
                 i.putExtra("flag",1);
                 startActivity(i);
             }

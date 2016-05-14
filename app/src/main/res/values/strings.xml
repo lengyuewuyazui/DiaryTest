@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">DiaryTest</string>
     <string name="setting">关于</string>
+    <string-array name="tips">
+        <item>标签</item>
+        <item>日常</item>
+        <item>情感</item>
+        <item>影评</item>
+        <item>美食</item>
+        <item>游记</item>
+        <item>收藏</item>
+        <item>随笔</item>
+    </string-array>
 </resources>

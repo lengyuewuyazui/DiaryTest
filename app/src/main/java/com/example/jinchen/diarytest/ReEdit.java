@@ -21,15 +21,20 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,13 +74,19 @@ public class ReEdit extends AppCompatActivity {
     private FloatingActionButton addbutton;
     private FloatingActionButton undobutton;
     private TextView textView1;
-    private TextView textView2;
+    private TextView textView2;;
+
     private EditText editText;
+    private EditText editText2;
+    private ImageView imageView_mood;
+    private Spinner spinner;
 
 
     private LocationManager locationManager;
     private String provider;
     public static final int SHOW_LOCATION = 0;
+    public int tip = 0;
+
 
 
 
@@ -167,22 +178,45 @@ public class ReEdit extends AppCompatActivity {
         textView1 = (TextView) findViewById(R.id.biaoti1);//得到TextView控件对象
         textView2 = (TextView) findViewById(R.id.biaoti3);//得到TextView控件对象
         editText = (EditText) findViewById(R.id.ettext1);//得到EditText控件对象
+        editText2 = (EditText) findViewById(R.id.biaoti);//得到EditText控件对象
         Typeface tv = Typeface.createFromAsset(getAssets(), "fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
-        textView1.setTypeface(tv);//使用字体
-
-        textView2.setTypeface(tv);//使用字体
-
-
+      //  textView1.setTypeface(tv);//使用字体
+      //  textView2.setTypeface(tv);//使用字体
         Typeface et = Typeface.createFromAsset(getAssets(), "fonts/newfont.ttf"); //将字体文件保存在assets/fonts/目录下，创建Typeface对象
         editText.setTypeface(et);//使用字体;
-
+        editText2.setTypeface(et);//使用字体;
+        spinner=(Spinner)findViewById(R.id.tip);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.tips, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+//        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                tip=spinner.getSelectedItemPosition();
+//            }
+//        });
         picture=(ImageView)findViewById(R.id.image);
-        int flag=getIntent().getIntExtra("flag",100);
+        imageView_mood=(ImageView)findViewById(R.id.mood);
+        final int moodnmb2=getIntent().getIntExtra("diarydb.MOOD",0);
+        final int moodnmb=getIntent().getIntExtra("mood",0);
+
+
+
+        final int flag=getIntent().getIntExtra("flag",100);
         if(flag==1){
+
             ReEdit();
+            InitMood(moodnmb2);
+
         }
         else if (flag==0){
+
             InitLoctionWeather();
+            InitMood(moodnmb);
+
         }
         else
         finish();
@@ -202,12 +236,31 @@ public class ReEdit extends AppCompatActivity {
         findViewById(R.id.SaveButton1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues values = new ContentValues();
-                //   values.put(diaryDB.TITLE, textView.getText().toString());
-                values.put(diaryDB.CONTENT, editText.getText().toString());
-                int a = getIntent().getIntExtra("diarydb.ID", 0);
-                dbwriter.update(diaryDB.TABLE_NAME, values, "_id=?", new String[]{String.valueOf(a)});
-                startActivity(new Intent(ReEdit.this, MainActivity.class));
+                if (flag==1) {
+                    ContentValues values = new ContentValues();
+                    values.put(diaryDB.TITLE, editText2.getText().toString());
+                    values.put(diaryDB.CONTENT, editText.getText().toString());
+                    values.put(diaryDB.MOOD,moodnmb2);
+                    int a = getIntent().getIntExtra("diarydb.ID", 0);
+                    dbwriter.update(diaryDB.TABLE_NAME, values, "_id=?", new String[]{String.valueOf(a)});
+                    startActivity(new Intent(ReEdit.this, MainActivity.class));
+                }
+                else if(flag==0)
+                {
+                    ContentValues values = new ContentValues();
+                    values.put(diaryDB.TITLE, editText2.getText().toString());
+                    values.put(diaryDB.DATE, textView1.getText().toString());
+                    values.put(diaryDB.WEATHER, textView2.getText().toString());
+                    values.put(diaryDB.CONTENT, editText.getText().toString());
+                    values.put(diaryDB.MOOD,moodnmb);
+                    // values.put(diaryDB.TIPS,tip);
+                    dbwriter.insert(diaryDB.TABLE_NAME, null, values);
+                    // finish();
+
+
+                    startActivity(new Intent(ReEdit.this, MainActivity.class));
+                }
+                else return;
             }
         });
 
@@ -265,11 +318,41 @@ public class ReEdit extends AppCompatActivity {
         });
 
 
+
     }
+    private void InitMood(int moodnmb){
+        switch(moodnmb){
+            case 0: if(moodnmb==0){imageView_mood.setImageDrawable(getDrawable(R.mipmap.smile));}
+
+            case 1:if(moodnmb==1) {imageView_mood.setImageDrawable(getDrawable(R.mipmap.cool));}
+
+            case 2:
+                if(moodnmb==2){imageView_mood.setImageDrawable(getDrawable(R.mipmap.love));}
+
+            case 3:
+                if(moodnmb==3){imageView_mood.setImageDrawable(getDrawable(R.mipmap.upset));}
+
+            case 4:
+                if(moodnmb==4){imageView_mood.setImageDrawable(getDrawable(R.mipmap.scary));}
+
+            case 5:
+                if(moodnmb==5){imageView_mood.setImageDrawable(getDrawable(R.mipmap.angry));}
+
+
+
+
+
+
+        }
+    }
+
     private void ReEdit(){
         textView1.setText(getIntent().getStringExtra("diarydb.DATE"));
         textView2.setText(getIntent().getStringExtra("diarydb.WEATHER"));
         editText.setText(getIntent().getStringExtra("diarydb.CONTENT"));
+        editText2.setText(getIntent().getStringExtra("diarydb.TITLE"));
+        //spinner.setSelection(getIntent().getIntExtra("diarydb.TIPS",0));
+
 
     }
     @Override
@@ -365,30 +448,30 @@ public class ReEdit extends AppCompatActivity {
     private void InitLoctionWeather(){
         diaryDB=new DiaryDB(this);
         dbwriter=diaryDB.getWritableDatabase();
-        findViewById(R.id.SaveButton1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                ContentValues values = new ContentValues();
-                values.put(diaryDB.DATE, textView1.getText().toString());
-                values.put(diaryDB.WEATHER, textView2.getText().toString());
-                values.put(diaryDB.CONTENT, editText.getText().toString());
-
-                dbwriter.insert(diaryDB.TABLE_NAME, null, values);
-                // finish();
-
-
-                startActivity(new Intent(ReEdit.this, MainActivity.class));
-
-            }
-        });
-        findViewById(R.id.DeleteButton1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // startActivity(new Intent(EditDiary.this,MainActivity.class));
-                finish();
-            }
-        });
+//        findViewById(R.id.SaveButton1).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                ContentValues values = new ContentValues();
+//                values.put(diaryDB.DATE, textView1.getText().toString());
+//                values.put(diaryDB.WEATHER, textView2.getText().toString());
+//                values.put(diaryDB.CONTENT, editText.getText().toString());
+//               // values.put(diaryDB.TIPS,tip);
+//                dbwriter.insert(diaryDB.TABLE_NAME, null, values);
+//                // finish();
+//
+//
+//                startActivity(new Intent(ReEdit.this, MainActivity.class));
+//
+//            }
+//        });
+//        findViewById(R.id.DeleteButton1).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // startActivity(new Intent(EditDiary.this,MainActivity.class));
+//                finish();
+//            }
+//        });
 
 
 

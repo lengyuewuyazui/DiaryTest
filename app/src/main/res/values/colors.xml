@@ -3,6 +3,6 @@
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#009688</color>
     <color name="colorAccent">#009688</color>
-    <color name="colorCursor">#e0e0e0</color>
+    <color name="colorCursor">#ffffff</color>
 
 </resources>

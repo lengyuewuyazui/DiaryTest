@@ -68,7 +68,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/biaoti"
                 android:hint="标题"
-                android:textSize="28sp"
+                android:textSize="24sp"
                 android:gravity="center"
                 android:layout_weight="8"/>
 

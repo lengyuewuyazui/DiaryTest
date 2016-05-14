@@ -10,14 +10,16 @@ import android.view.View;
 
 public class DiaryDB  extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "notes";
-    //public static final String TITLE="title";
+    public static final String TITLE="title";
     public static final String DATE="date";
     public static final String WEATHER="weather";
-
+    public static final String TIPS = "tips";
     public static final String CONTENT = "content";
     public static final String PATH = "path";
     public static final String VIDEO = "video";
     public static final String ID = "_id";
+    public static final String MOOD = "_mood";
+
     public static final String TIME = "time";
     public DiaryDB(Context context) {
         super(context, "diary", null, 1);
@@ -28,6 +30,9 @@ public class DiaryDB  extends SQLiteOpenHelper{
         db.execSQL("CREATE TABLE " + TABLE_NAME + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + DATE+ " TEXT NOT NULL,"
+                + TITLE+ " TEXT NOT NULL,"
+                + MOOD+ " INTEGER TEXT NOT NULL,"
+               // + TIPS+ " INTEGER,"
                 + WEATHER+ " TEXT NOT NULL,"
                 + CONTENT + " TEXT NOT NULL)");
 //                + PATH + " TEXT NOT NULL,"
